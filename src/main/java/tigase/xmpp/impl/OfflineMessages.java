@@ -295,17 +295,16 @@ public class OfflineMessages
 
             // remove any previous delay element
             Element delay = elem.getChild("delay", "urn:xmpp:delay");
-            if (delay != null) {
+            if (delay == null) {
                 log.log( Level.WARNING, "Restoring packet, possible offline storage loop? {0}", pac );
-                elem.removeChild(delay);
+				String from = pac.getStanzaTo().getDomain();
+				Element x = new Element( "delay", "Offline Storage - " + defHost, new String[] {
+						"from",
+						"stamp", "xmlns" }, new String[] { from, stamp, "urn:xmpp:delay" } );
+
+				elem.addChild(x);
             }
 
-			String from = pac.getStanzaTo().getDomain();
-			Element x = new Element( "delay", "Offline Storage - " + defHost, new String[] {
-				"from",
-				"stamp", "xmlns" }, new String[] { from, stamp, "urn:xmpp:delay" } );
-
-			elem.addChild( x );
 			repo.storeMessage( pac.getStanzaFrom(), pac.getStanzaTo(), null, elem );
 			pac.processedBy( ID );
 
