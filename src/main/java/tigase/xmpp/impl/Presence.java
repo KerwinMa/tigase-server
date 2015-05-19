@@ -927,7 +927,8 @@ public class Presence
 					// Send to old resource presence about new resource
 					Packet pres_update = presence.copyElementOnly();
 
-					pres_update.initVars(presence.getStanzaFrom(), conn.getJID());
+					pres_update.initVars(presence.getStanzaFrom(), conn.getJID()
+							.copyWithoutResource());
 					pres_update.setPacketTo(conn.getConnectionId());
 					results.offer(pres_update);
 				} catch (NotAuthorizedException | NoConnectionIdException e) {
